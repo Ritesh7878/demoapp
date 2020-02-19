@@ -24,14 +24,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.example.demo.security.domain.repository", entityManagerFactoryRef = "userEntityManagerFactory", transactionManagerRef = "userTransactionManager")
+@EnableJpaRepositories(basePackages = "com.example.springbootdemo.domain", entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
 @EnableTransactionManagement
 public class DatabaseConfig {
 
 	@Value("${spring.datasource.maxPoolSize}")
 	private int maxPoolSize;
 
-	@Bean(name= "userDbProperties")
+	@Bean(name= "dbProperties")
 	@Primary
 	@ConfigurationProperties(prefix = "spring.datasource.user")
 	public DataSourceProperties userDataSourceProperties() {
@@ -41,7 +41,7 @@ public class DatabaseConfig {
 	@Bean
 	@Primary
 	@ConfigurationProperties(prefix = "spring.datasource.user.configuration")
-	public DataSource dataSource(@Qualifier("userDbProperties") DataSourceProperties properties) {
+	public DataSource dataSource(@Qualifier("dbProperties") DataSourceProperties properties) {
 		return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
 	}
 
@@ -49,14 +49,14 @@ public class DatabaseConfig {
 	 * Entity Manager Factory setup.
 	 */
 	@Primary
-	@Bean(name = "userEntityManagerFactory")
+	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 		factoryBean.setDataSource(dataSource(userDataSourceProperties()));
-		factoryBean.setPackagesToScan("com.example.demo.security.domain");
+		factoryBean.setPackagesToScan("com.example.springbootdemo.domain");
 		factoryBean.setJpaVendorAdapter(jpaVendorAdapter());
 		factoryBean.setJpaProperties(jpaProperties());
-		factoryBean.setPersistenceUnitName("UserJDBCPool");
+		factoryBean.setPersistenceUnitName("gymMySQLJDBCPool");
 		return factoryBean;
 	}
 
@@ -71,7 +71,7 @@ public class DatabaseConfig {
 		return new Properties();
 	}
 
-	@Bean(name = "userTransactionManager")
+	@Bean(name = "transactionManager")
 	@Autowired
 	@Primary
 	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {

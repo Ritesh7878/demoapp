@@ -10,11 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.springbootdemo.domain.user.entity.User;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-
-@RequiredArgsConstructor
 public class AuthUser implements UserDetails{
 
 	/**
@@ -27,7 +24,8 @@ public class AuthUser implements UserDetails{
 	private String accountExpired;
 	private String accountLocked;
 	private String accountEnabled;
-	AuthUser(User user){
+	
+	public AuthUser(User user){
 		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.accountEnabled = user.getAccountEnabled();
