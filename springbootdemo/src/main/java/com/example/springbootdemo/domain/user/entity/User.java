@@ -19,6 +19,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 
+import com.example.springbootdemo.domain.user.dto.UserDTO;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +29,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name="users")
 public class User {
-	 @Id
+	
+
+	@Id
 	 @GeneratedValue(strategy=GenerationType.AUTO)
 	 private Long id;
 	
@@ -44,8 +48,8 @@ public class User {
 	 @Temporal(TemporalType.TIMESTAMP)
 	 private Date creationDate;
 	 
-	 @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	 @JoinColumn(name="user_id")
+	 @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	 @JoinColumn(name="id")
 	 private UserInfo userInfo;
 	 
 	 @OneToMany(cascade = CascadeType.ALL)
