@@ -1,16 +1,21 @@
 package com.example.springbootdemo.domain.user.service;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.springbootdemo.domain.user.auth.AuthUser;
+import com.example.springbootdemo.domain.user.dto.UserDTO;
+import com.example.springbootdemo.domain.user.entity.Role;
 import com.example.springbootdemo.domain.user.entity.User;
+import com.example.springbootdemo.domain.user.entity.UserInfo;
 import com.example.springbootdemo.domain.user.repository.UserRepository;
 
 
@@ -19,6 +24,8 @@ public class MyUserDetailService implements UserDetailsService {
 
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PasswordEncoder bcryptEncoder;
 	
 	MyUserDetailService(UserRepository userRepository){
 		this.userRepository = userRepository;
@@ -34,14 +41,33 @@ public class MyUserDetailService implements UserDetailsService {
 		throw new UsernameNotFoundException("User not found in system.");
 	}
 	
-	public User registerUser(User user) {
-		Objects.requireNonNull(user);
-		String userEmail = user.getEmail();
-		userRepository.findByEmail(userEmail);
+	public User registerUser(UserDTO userDto) {
+		Objects.requireNonNull(userDto);
+		String userEmail = userDto.getEmail();
+		Optional<User> userFound = userRepository.findByEmail(userEmail);
+		if(userFound.isPresent()) {
+			throw new RuntimeException("User already exist with this email");
+		}
 		
+		User user = new User();
+		user.setUsername(userDto.getUsername());
+		user.setPassword(bcryptEncoder.encode(userDto.getPassword()));
+		user.setEmail(userDto.getEmail());
+		UserInfo userInfo = new UserInfo();
+		userInfo.setFirstName(userDto.getFirstName());
+		userInfo.setLastName(userDto.getLastName());
+		userInfo.setNickName(userDto.getNickName());
+		userInfo.setBirthDate(userDto.getBirthDate());
 		
+		Role role = new Role();
+		role.setName("USER");
 		
-		return null;
+		user.setUserInfo(userInfo);
+		user.setUserRoles(Arrays.asList(role));
+		
+		userRepository.save(user);
+		
+		return user;
 		
 	}
 
