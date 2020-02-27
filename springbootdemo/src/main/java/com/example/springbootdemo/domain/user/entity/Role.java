@@ -1,7 +1,5 @@
 package com.example.springbootdemo.domain.user.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name="users_roles")
 public class Role {
 	 @Id
-	 @GeneratedValue(strategy=GenerationType.AUTO)
+	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	 @Column(name="role_id")
 	 private Long roleId; 
 	 

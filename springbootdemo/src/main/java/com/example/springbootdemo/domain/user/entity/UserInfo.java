@@ -1,6 +1,5 @@
 package com.example.springbootdemo.domain.user.entity;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Email;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name="users_details")
 public class UserInfo {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="detail_id")
 	private Long detailId;
 	

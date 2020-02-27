@@ -46,7 +46,7 @@ public class MyUserDetailService implements UserDetailsService {
 		String userEmail = userDto.getEmail();
 		Optional<User> userFound = userRepository.findByEmail(userEmail);
 		if(userFound.isPresent()) {
-			throw new RuntimeException("User already exist with this email");
+			throw new UserAlreadyExistException("User already exist with this email");
 		}
 		
 		User user = new User();
